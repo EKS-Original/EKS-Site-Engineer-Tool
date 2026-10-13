@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EKS Site Engineer Professional Tools</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Pyidaungsu', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-slate-800 border-b border-slate-700 py-6 px-4 shadow-md">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-amber-400">⚡ EKS Site Engineer Tools</h1>
+                <p class="text-slate-400 text-sm mt-1">Electrical Knowledge Sharing - Ready-to-Use Web Utilities</p>
+            </div>
+            <div class="mt-4 md:mt-0 bg-slate-700 px-4 py-2 rounded-lg text-xs text-amber-300 font-mono border border-slate-600">
+                Standard: IEC / BS 7671 / Myanmar M&E
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-8">
+
+        <!-- Tool 1: MCB & Cable Sizing Validator -->
+        <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg">
+            <h2 class="text-xl font-bold text-amber-400 mb-2">1. Cable Protection Rule Checker ($In \le Iz$)</h2>
+            <p class="text-slate-300 text-sm mb-4">MCB ၏ Ampere Rating ($In$) သည် ဝါယာကြိုး၏ ခံနိုင်ရည် ($Iz$) ထက် ငယ်ရမည် သို့မဟုတ် ညီရမည်။</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Cable Size & Max Current ($Iz$):</label>
+                    <select id="cableSize" class="w-full bg-slate-900 border border-slate-750 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-amber-500 outline-none">
+                        <option value="15">1.5 sq.mm (Max ~15A)</option>
+                        <option value="24" selected>2.5 sq.mm (Max ~24A)</option>
+                        <option value="32">4.0 sq.mm (Max ~32A)</option>
+                        <option value="41">6.0 sq.mm (Max ~41A)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Selected MCB Rating ($In$):</label>
+                    <select id="mcbRating" class="w-full bg-slate-900 border border-slate-750 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-amber-500 outline-none">
+                        <option value="6">6A MCB</option>
+                        <option value="10">10A MCB</option>
+                        <option value="16">16A MCB</option>
+                        <option value="20" selected>20A MCB</option>
+                        <option value="32">32A MCB</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="checkCableMCB()" class="mt-4 w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-lg transition">စစ်ဆေးမည် (Check Compliance)</button>
+            <div id="mcbResult" class="mt-4 p-4 rounded-lg hidden font-medium text-center"></div>
+        </section>
+
+        <!-- Tool 2: Earth Resistance & LPS Checker -->
+        <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg">
+            <h2 class="text-xl font-bold text-amber-400 mb-2">2. Earth Resistance & LPS Validator</h2>
+            <p class="text-slate-300 text-sm mb-4">တိုင်းတာရရှိသော မြေကြီးခုခံအား (Earth Resistance) သည် စံသတ်မှတ်ချက်အတွင်း ရှိမရှိ စစ်ဆေးခြင်း။</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">System Type:</label>
+                    <select id="earthSystem" class="w-full bg-slate-900 border border-slate-750 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-amber-500 outline-none">
+                        <option value="5">General Domestic / Commercial DB (&lt; 5Ω)</option>
+                        <option value="10">Lightning Protection System - LPS (&lt; 10Ω)</option>
+                        <option value="1">Server Room / Data Center / Substation (&lt;= 1Ω)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Measured Value (Ohms):</label>
+                    <input type="number" id="measuredEarth" step="0.1" placeholder="ဥပမာ - 3.5" class="w-full bg-slate-900 border border-slate-750 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-amber-500 outline-none">
+                </div>
+            </div>
+            <button onclick="checkEarthResistance()" class="mt-4 w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-lg transition">ခုခံအား အတိုအတาสစ်ဆေးမည်</button>
+            <div id="earthResult" class="mt-4 p-4 rounded-lg hidden font-medium text-center"></div>
+        </section>
+
+        <!-- Tool 3: RCD Trip Time Validator -->
+        <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg">
+            <h2 class="text-xl font-bold text-amber-400 mb-2">3. RCD / ELCB Trip Time Validator</h2>
+            <p class="text-slate-300 text-sm mb-4">30mA RCD စမ်းသပ်စစ်ဆေးမှု စံနှုန်းများ (IEC Standards)</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Test Multiplier:</label>
+                    <select id="rcdTestType" class="w-full bg-slate-900 border border-slate-750 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-amber-500 outline-none">
+                        <option value="300">1 x IΔn (30mA) - Max 300ms</option>
+                        <option value="40">5 x IΔn (150mA) - Max 40ms</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Measured Trip Time (ms):</label>
+                    <input type="number" id="measuredTime" placeholder="ဥပမာ - 120" class="w-full bg-slate-900 border border-slate-750 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-amber-500 outline-none">
+                </div>
+            </div>
+            <button onclick="checkRCDTime()" class="mt-4 w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-lg transition">Trip Time စစ်ဆေးမည်</button>
+            <div id="rcdResult" class="mt-4 p-4 rounded-lg hidden font-medium text-center"></div>
+        </section>
+
+        <!-- Section 4: Quick Engineering Rules -->
+        <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg">
+            <h2 class="text-xl font-bold text-amber-400 mb-4">4. Site Engineer Core Reference Rules</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-300">
+                <div class="bg-slate-900 p-4 rounded-lg border border-slate-750">
+                    <strong class="text-amber-300 block mb-1">🔹 MEP Clearance Rule #1:</strong>
+                    လျှပ်စစ် Cable Tray များကို ရေပိုက်များ (Plumbing/Sprinkler) ၏ အောက်တည့်တည့်တွင် လုံးဝမတပ်ဆင်ရပါ။ အထက်ဘက်မှသာ သွယ်တန်းရမည်။
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg border border-slate-750">
+                    <strong class="text-amber-300 block mb-1">🔹 Conduit Space Factor:</strong>
+                    ပိုက်အတွင်း ကြိုးထည့်ရာတွင် အပူระအာ လွတ်လပ်စွာထွက်စေရန် 45% Rule ကို တိကျစွာလိုက်နာရမည်။
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg border border-slate-750">
+                    <strong class="text-amber-300 block mb-1">🔹 DB Labeling Standard:</strong>
+                    Circuit Breaker များ၏ ညာဘက်အပေါ်ထောင့်တွင် အဝင် (Input) Label စာသားများ အပိုထပ်နေခြင်း (Duplicate labels) လုံးဝမရှိစေရ။
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg border border-slate-750">
+                    <strong class="text-amber-300 block mb-1">🔹 Fire Stopping Rule:</strong>
+                    နံရံဖောက်၍ ကြိုးဆွဲပြီးပါက မီးခိုးနှင့် မီးတောက်မကူးစက်ရန် Fire Stop Sealant ဖြင့် လေလုံအောင် ပြန်ပိတ်ရမည်။
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-slate-500 text-xs mt-12 border-t border-slate-800">
+        © 2026 EKS (Electrical Knowledge Sharing) Original Brand. All Rights Reserved.
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        function checkCableMCB() {
+            const iz = parseFloat(document.getElementById('cableSize').value);
+            const inVal = parseFloat(document.getElementById('mcbRating').value);
+            const resDiv = document.getElementById('mcbResult');
+            resDiv.classList.remove('hidden');
+
+            if (inVal <= iz) {
+                resDiv.className = "mt-4 p-4 rounded-lg font-medium text-center bg-emerald-900/50 text-emerald-300 border border-emerald-700";
+                resDiv.innerHTML = `✅ မှန်ကန်သည် (PASS): MCB (${inVal}A) သည် ကြိုးခံနိုင်ရည် ($Iz$ = ${iz}A) ထက် ငယ်ပါသည် သို့မဟုတ် ညီပါသည်။`;
+            } else {
+                resDiv.className = "mt-4 p-4 rounded-lg font-medium text-center bg-rose-900/50 text-rose-300 border border-rose-700";
+                resDiv.innerHTML = `❌ အန္တရာယ်ရှိသည် (FAIL): MCB (${inVal}A) သည် ကြိုးခံနိုင်ရည် ($Iz$ = ${iz}A) ထက် ကြီးနေပါသည်။ ကြိုးလောင်ကျွမ်းနိုင်ပါသည်!`;
+            }
+        }
+
+        function checkEarthResistance() {
+            const maxAllowed = parseFloat(document.getElementById('earthSystem').value);
+            const measured = parseFloat(document.getElementById('measuredEarth').value);
+            const resDiv = document.getElementById('earthResult');
+            resDiv.classList.remove('hidden');
+
+            if (isNaN(measured)) {
+                resDiv.className = "mt-4 p-4 rounded-lg font-medium text-center bg-amber-900/50 text-amber-300 border border-amber-700";
+                resDiv.innerHTML = `⚠️ ကျေးဇူးပြု၍ တိုင်းတာရရှိသော တန်ဖိုးကို ထည့်သွင်းပါ။`;
+                return;
+            }
+
+            if (measured <= maxAllowed) {
+                resDiv.className = "mt-4 p-4 rounded-lg font-medium text-center bg-emerald-900/50 text-emerald-300 border border-emerald-700";
+                resDiv.innerHTML = `✅ PASS: တိုင်းတာရရှိသော ခုခံအား (${measured}Ω) သည် သတ်မှတ်စံနှုန်း (${maxAllowed}Ω အောက်) နှင့် ကိုက်ညီပါသည်။`;
+            } else {
+                resDiv.className = "mt-4 p-4 rounded-lg font-medium text-center bg-rose-900/50 text-rose-300 border border-rose-700";
+                resDiv.innerHTML = `❌ FAIL: ခုခံအား (${measured}Ω) များနေပါသည်။ Earth Compound ထပ်ထည့်ခြင်း သို့မဟုတ် တိုင်အသစ်ထပ်ရိုက်ရန် လိုအပ်ပါသည်။`;
+            }
+        }
+
+        function checkRCDTime() {
+            const maxTime = parseFloat(document.getElementById('rcdTestType').value);
+            const measured = parseFloat(document.getElementById('measuredTime').value);
+            const resDiv = document.getElementById('rcdResult');
+            resDiv.classList.remove('hidden');
+
+            if (isNaN(measured)) {
+                resDiv.className = "mt-4 p-4 rounded-lg font-medium text-center bg-amber-900/50 text-amber-300 border border-amber-700";
+                resDiv.innerHTML = `⚠️ ကျေးဇူးပြု၍ Trip Time တန်ဖိုးကို ထည့်သွင်းပါ။`;
+                return;
+            }
+
+            if (measured <= maxTime) {
+                resDiv.className = "mt-4 p-4 rounded-lg font-medium text-center bg-emerald-900/50 text-emerald-300 border border-emerald-700";
+                resDiv.innerHTML = `✅ PASS: Trip Time (${measured} ms) သည် စံသတ်မှတ်ချိန် (${maxTime} ms အောက်) အတွင်း ပြီးမြောက်ပါသည်။`;
+            } else {
+                resDiv.className = "mt-4 p-4 rounded-lg font-medium text-center bg-rose-900/50 text-rose-300 border border-rose-700";
+                resDiv.innerHTML = `❌ FAIL: Trip Time နှေးကွေးနေပါသည် (${measured} ms)။ RCD ကို စစ်ဆေးလဲလှယ်ရန် လိုအပ်ပါသည်။`;
+            }
+        }
+    </script>
+</body>
+</html>
